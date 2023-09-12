@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var hbs = require('hbs');   // ADDED THIS - NOT SPECIFIED IN THE FULL STACK 1 GUIDE
+var hbs = require('hbs'); 
 
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
