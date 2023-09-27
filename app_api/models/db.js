@@ -7,8 +7,7 @@ const connect = () => {
     setTimeout(() => mongoose.connect(dbURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useCreateIndex: true,
-    }), 1000);
+    }));
 }
 
 mongoose.connection.on('connected', () => {                 
