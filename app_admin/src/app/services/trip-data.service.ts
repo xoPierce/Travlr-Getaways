@@ -1,12 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Trip } from '../models/trip';
+import { User } from '../models/user';
+import { AuthResponse } from '../models/authresponse';
+import { BROWSER_STORAGE } from '../storage';
 
 @Injectable()
 export class TripDataService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    @Inject(BROWSER_STORAGE) private storage: Storage) { }
 
   private apiBaseUrl = 'http://localhost:3000/api/';
   private tripUrl = `${this.apiBaseUrl}trips/`;
@@ -14,9 +18,9 @@ export class TripDataService {
   public addTrip(formData: Trip): Promise<Trip> {
     console.log('Inside TripDataService#addTrip');
     return this.http
-      .post(this.tripUrl, formData)  // pass form data in request body
+      .post(this.tripUrl, formData)  // pass form data in the request body
       .toPromise()
-      .then(response => response as Trip[])
+      .then(response => response as Trip)
       .catch(this.handleError);
   }
 
@@ -47,11 +51,26 @@ export class TripDataService {
       .toPromise()
       .catch(this.handleError);
   }
-   
 
   private handleError(error: any): Promise<any> {
     console.error('Something has gone wrong', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
 
+  public login(user: User): Promise<AuthResponse> {
+    return this.makeAuthApiCall('login', user);
+  }
+
+  public register(user: User): Promise<AuthResponse> {
+    return this.makeAuthApiCall('register', user);
+  }
+
+  private makeAuthApiCall(urlPath: string, user: User): Promise<AuthResponse> {
+    const url: string = `${this.apiBaseUrl}/${urlPath}`;
+    return this.http
+      .post(url, user)
+      .toPromise()
+      .then(response => response as AuthResponse) // Remove .json() here
+      .catch(this.handleError);
+  }
 }
